@@ -20,16 +20,16 @@ x = linspace(dx,1-dx,N);
 x_hist = zeros(N,Nt);
 tol = 1e-6;
 
-t_domain = linspace(0,dt*Nt,Nt);
+t_domain = linspace(0,dt*Nt,Nt+1);
 [X, T] = meshgrid(x,t_domain);
 
 
 [C, A, F, B, M] = getCoeffMat(N,x,dx);
 
-x_hist = getAllTrainingSolutionsOptimized(N,dt,Nt,tol,x,dx);
+x_hist = getAllTrainingSolutionsOptimized(N,dt,Nt+1,tol,x,dx);
 
 
-[x_hist_test, FOMtime] = getSolutionOptimized(N,dt,Nt,tol,mu_left,mu2,dx,x);
+[x_hist_test, FOMtime] = getSolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,dx,x);
 FOMtime
 
 
@@ -108,26 +108,26 @@ for i=1:size(latTol,1)
     reconError(i) = norm(x_hist_recon - x_hist_test,'fro')^2 / norm(x_hist_test,'fro')^2;
 
     
-    [x_hat_Galerkin, ROMtime] = getStandardGalerkinSolutionOptimized(N,dt,Nt,tol,mu_left,mu2,dx,x,phi);
+    [x_hat_Galerkin, ROMtime] = getStandardGalerkinSolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,dx,x,phi);
     x_hist_Galerkin = phi*x_hat_Galerkin;
     statePredictionErrorStandardGalerkin(i) = norm(x_hist_Galerkin - x_hist_test,'fro')^2 / norm(x_hist_test,'fro')^2;
     speedupFactorStandardGalerkin(i) = FOMtime/ROMtime;
 
 
-    [x_hat_LSPG, ROMtime] = getStandardLSPGsolutionOptimized(N,dt,Nt,tol,mu_left,mu2,dx,x,phi);
+    [x_hat_LSPG, ROMtime] = getStandardLSPGsolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,dx,x,phi);
     x_hist_LSPG = phi*x_hat_LSPG;
     statePredictionErrorStandardLSPG(i) = norm(x_hist_LSPG - x_hist_test,'fro')^2 / norm(x_hist_test,'fro')^2;
     speedupFactorStandardLSPG(i) = FOMtime/ROMtime;
 
 
-    [x_hat_HFGalerkin, ROMtime] = getSolutionHFGalerkinOptimized(N,dt,Nt,tol,mu_left,mu2,dx,x,C,A,F,B,M,phi);
+    [x_hat_HFGalerkin, ROMtime] = getSolutionHFGalerkinOptimized(N,dt,Nt+1,tol,mu_left,mu2,dx,x,C,A,F,B,M,phi);
     speedupFactorHFGalerkin(i) = FOMtime/ROMtime;
     x_approx_HFGalerkin = phi*x_hat_HFGalerkin;
     statePredictionErrorHFGalerkin(i) = norm(x_approx_HFGalerkin - x_hist_test,'fro')^2/norm(x_hist_test,'fro')^2;
     ROMevaluationErrorHFGalerkin(i) = norm(x_approx_HFGalerkin - x_hist_Galerkin,'fro')^2 / norm(x_hist_Galerkin,'fro')^2;
 
 
-    [x_hat_HFLSPG, ROMtime] = getSolutionHFLSPGOptimized(N,dt,Nt,tol,mu_left,mu2,dx,x,C,A,F,B,M,phi);
+    [x_hat_HFLSPG, ROMtime] = getSolutionHFLSPGOptimized(N,dt,Nt+1,tol,mu_left,mu2,dx,x,C,A,F,B,M,phi);
     speedupFactorHFLSPG(i) = FOMtime/ROMtime;
     x_approx_HFLSPG = phi*x_hat_HFLSPG;
     statePredictionErrorHFLSPG(i) = norm(x_approx_HFLSPG - x_hist_test,'fro')^2/norm(x_hist_test,'fro')^2;
@@ -135,7 +135,7 @@ for i=1:size(latTol,1)
 
 
     load(strcat('BurgersECSWweights/LSPG_1e5_', int2str(i), '.mat'),'xi','indices');
-    [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt,tol,mu_left,mu2,phi,xi,indices,x);
+    [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,phi,xi,indices,x);
     x_approx_ECSWLSPG1e5 = phi*x_hat_hist;
     statePredictionErrorECSWLSPG1e5(i) = norm(x_approx_ECSWLSPG1e5-x_hist_test,'fro')^2/norm(x_hist_test,'fro')^2;
     ROMevaluationErrorECSWLSPG1e5(i) = norm(x_approx_ECSWLSPG1e5-x_hist_LSPG,'fro')^2/norm(x_hist_LSPG,'fro')^2;
@@ -143,7 +143,7 @@ for i=1:size(latTol,1)
     speedupFactorECSWLSPG1e5(i) = FOMtime / ROMtime;
 
     load(strcat('BurgersECSWweights/Galerkin_1e5_', int2str(i), '.mat'),'xi','indices');
-    [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt,tol,mu_left,mu2,phi,xi,indices,x);
+    [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,phi,xi,indices,x);
     x_approx_ECSWGalerkin1e5 = phi*x_hat_hist;
     statePredictionErrorECSWGalerkin1e5(i) = norm(x_approx_ECSWGalerkin1e5-x_hist_test,'fro')^2/norm(x_hist_test,'fro')^2;
     ROMevaluationErrorECSWGalerkin1e5(i) = norm(x_approx_ECSWGalerkin1e5-x_hist_Galerkin,'fro')^2/norm(x_hist_Galerkin,'fro')^2;
@@ -152,7 +152,7 @@ for i=1:size(latTol,1)
 
 
     load(strcat('BurgersECSWweights/LSPG_1e7_', int2str(i), '.mat'),'xi','indices');
-    [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt,tol,mu_left,mu2,phi,xi,indices,x);
+    [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,phi,xi,indices,x);
     x_approx_ECSWLSPG1e7 = phi*x_hat_hist;
     statePredictionErrorECSWLSPG1e7(i) = norm(x_approx_ECSWLSPG1e7-x_hist_test,'fro')^2/norm(x_hist_test,'fro')^2;
     ROMevaluationErrorECSWLSPG1e7(i) = norm(x_approx_ECSWLSPG1e7-x_hist_LSPG,'fro')^2/norm(x_hist_LSPG,'fro')^2;
@@ -161,7 +161,7 @@ for i=1:size(latTol,1)
 
 
     load(strcat('BurgersECSWweights/Galerkin_1e7_', int2str(i), '.mat'),'xi','indices');
-    [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt,tol,mu_left,mu2,phi,xi,indices,x);
+    [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,phi,xi,indices,x);
     x_approx_ECSWGalerkin1e7 = phi*x_hat_hist;
     statePredictionErrorECSWGalerkin1e7(i) = norm(x_approx_ECSWGalerkin1e7-x_hist_test,'fro')^2/norm(x_hist_test,'fro')^2;
     ROMevaluationErrorECSWGalerkin1e7(i) = norm(x_approx_ECSWGalerkin1e7-x_hist_Galerkin,'fro')^2/norm(x_hist_Galerkin,'fro')^2;
@@ -169,7 +169,7 @@ for i=1:size(latTol,1)
     speedupFactorECSWGalerkin1e7(i) = FOMtime / ROMtime;
 
     load(strcat('BurgersECSWweights/LSPG_1e9_', int2str(i), '.mat'),'xi','indices');
-    [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt,tol,mu_left,mu2,phi,xi,indices,x);
+    [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,phi,xi,indices,x);
     x_approx_ECSWLSPG1e9 = phi*x_hat_hist;
     statePredictionErrorECSWLSPG1e9(i) = norm(x_approx_ECSWLSPG1e9-x_hist_test,'fro')^2/norm(x_hist_test,'fro')^2;
     ROMevaluationErrorECSWLSPG1e9(i) = norm(x_approx_ECSWLSPG1e9-x_hist_LSPG,'fro')^2/norm(x_hist_LSPG,'fro')^2;
@@ -178,7 +178,7 @@ for i=1:size(latTol,1)
     
 
     load(strcat('BurgersECSWweights/Galerkin_1e9_', int2str(i), '.mat'),'xi','indices');
-    [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt,tol,mu_left,mu2,phi,xi,indices,x);
+    [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,phi,xi,indices,x);
     x_approx_ECSWGalerkin1e9 = phi*x_hat_hist;
     statePredictionErrorECSWGalerkin1e9(i) = norm(x_approx_ECSWGalerkin1e9-x_hist_test,'fro')^2/norm(x_hist_test,'fro')^2;
     ROMevaluationErrorECSWGalerkin1e9(i) = norm(x_approx_ECSWGalerkin1e9-x_hist_Galerkin,'fro')^2/norm(x_hist_Galerkin,'fro')^2;

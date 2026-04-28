@@ -16,15 +16,15 @@ dx = 1/(N+1);
 x = linspace(dx,1-dx,N);
 tol = 1e-6;
 
-t_domain = linspace(0,dt*Nt,Nt);
+t_domain = linspace(0,dt*Nt,Nt+1);
 [X, T] = meshgrid(x,t_domain);
 
 
 [C, A, F, B, M] = getCoeffMat(N,x,dx);
 
-x_hist = getAllTrainingSolutionsOptimized(N,dt,Nt,tol,x,dx,N1,N2);
+x_hist = getAllTrainingSolutionsOptimized(N,dt,Nt+1,tol,x,dx,N1,N2);
 
-[x_hist_test, FOMtime] = getAllTestSolutionsOptimized(N,dt,Nt,tol,x,dx,N1,N2);
+[x_hist_test, FOMtime] = getAllTestSolutionsOptimized(N,dt,Nt+1,tol,x,dx,N1,N2);
 
 
 %% ROMs
@@ -63,36 +63,36 @@ for i=1:size(latTol,1)
 
     phi = U(:,1:numModes);
 
-    [x_hat_HFGalerkin, ROMtime] = getSolutionHFGalerkinOptimized(N,dt,Nt,tol,dx,x,C,A,F,B,M,phi,N1,N2);
+    [x_hat_HFGalerkin, ROMtime] = getSolutionHFGalerkinOptimized(N,dt,Nt+1,tol,dx,x,C,A,F,B,M,phi,N1,N2);
     x_approx_HFGalerkin = getApprox(phi,x_hat_HFGalerkin,N1,N2);
     statePredictionErrorHFGalerkin(i,:,:) = getError(x_approx_HFGalerkin,x_hist_test,N1,N2);
     
 
-    [x_hat_HFLSPG, ROMtime] = getSolutionHFLSPGOptimized(N,dt,Nt,tol,dx,x,C,A,F,B,M,phi,N1,N2);
+    [x_hat_HFLSPG, ROMtime] = getSolutionHFLSPGOptimized(N,dt,Nt+1,tol,dx,x,C,A,F,B,M,phi,N1,N2);
     x_approx_HFLSPG = getApprox(phi,x_hat_HFLSPG,N1,N2);
     statePredictionErrorHFLSPG(i,:,:) = getError(x_approx_HFLSPG,x_hist_test,N1,N2);
 
 
     load(strcat('BurgersECSWweights/LSPG_1e5_', int2str(i), '.mat'),'xi','indices');
-    [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt,tol,phi,xi,indices,x,N1,N2);
+    [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt+1,tol,phi,xi,indices,x,N1,N2);
     x_approx_ECSWLSPG1e5 = getApprox(phi,x_hat_hist,N1,N2);
     statePredictionErrorECSWLSPG1e5(i,:,:) = getError(x_approx_ECSWLSPG1e5,x_hist_test,N1,N2);
 
 
     load(strcat('BurgersECSWweights/Galerkin_1e5_', int2str(i), '.mat'),'xi','indices');
-    [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt,tol,phi,xi,indices,x,N1,N2);
+    [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt+1,tol,phi,xi,indices,x,N1,N2);
     x_approx_ECSWGalerkin1e5 = getApprox(phi,x_hat_hist,N1,N2);
     statePredictionErrorECSWGalerkin1e5(i,:,:) = getError(x_approx_ECSWGalerkin1e5,x_hist_test,N1,N2);
 
 
     load(strcat('BurgersECSWweights/LSPG_1e9_', int2str(i), '.mat'),'xi','indices');
-    [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt,tol,phi,xi,indices,x,N1,N2);
+    [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt+1,tol,phi,xi,indices,x,N1,N2);
     x_approx_ECSWLSPG1e9 = getApprox(phi,x_hat_hist,N1,N2);
     statePredictionErrorECSWLSPG1e9(i,:,:) = getError(x_approx_ECSWLSPG1e9,x_hist_test,N1,N2);
 
 
     load(strcat('BurgersECSWweights/Galerkin_1e9_', int2str(i), '.mat'),'xi','indices');
-    [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt,tol,phi,xi,indices,x,N1,N2);
+    [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt+1,tol,phi,xi,indices,x,N1,N2);
     x_approx_ECSWGalerkin1e9 = getApprox(phi,x_hat_hist,N1,N2);
     statePredictionErrorECSWGalerkin1e9(i,:,:) = getError(x_approx_ECSWGalerkin1e9,x_hist_test,N1,N2);
 

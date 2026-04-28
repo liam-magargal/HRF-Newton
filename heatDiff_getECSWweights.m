@@ -16,15 +16,15 @@ x = linspace(dx,1-dx,N);
 tol = 1e-6;
 a_all = [-2 -1 0 1 2];
 b_all = [0 -2 1 -1 2];
-t_domain = linspace(0,dt*Nt,Nt);
+t_domain = linspace(0,dt*Nt,Nt+1);
 [X, T] = meshgrid(x,t_domain);
 
 
-x_hist_sol1 = getSolutionOptimizedNoLift(N,dt,Nt,tol,-2,0,mu,dx,x);
-x_hist_sol2 = getSolutionOptimizedNoLift(N,dt,Nt,tol,-1,-2,mu,dx,x);
-x_hist_sol3 = getSolutionOptimizedNoLift(N,dt,Nt,tol,0,1,mu,dx,x);
-x_hist_sol4 = getSolutionOptimizedNoLift(N,dt,Nt,tol,1,-1,mu,dx,x);
-x_hist_sol5 = getSolutionOptimizedNoLift(N,dt,Nt,tol,2,2,mu,dx,x);
+x_hist_sol1 = getSolutionOptimizedNoLift(N,dt,Nt+1,tol,-2,0,mu,dx,x);
+x_hist_sol2 = getSolutionOptimizedNoLift(N,dt,Nt+1,tol,-1,-2,mu,dx,x);
+x_hist_sol3 = getSolutionOptimizedNoLift(N,dt,Nt+1,tol,0,1,mu,dx,x);
+x_hist_sol4 = getSolutionOptimizedNoLift(N,dt,Nt+1,tol,1,-1,mu,dx,x);
+x_hist_sol5 = getSolutionOptimizedNoLift(N,dt,Nt+1,tol,2,2,mu,dx,x);
 x_hist = [x_hist_sol1 x_hist_sol2 x_hist_sol3 x_hist_sol4 x_hist_sol5];
 
 
@@ -86,25 +86,25 @@ for i=1:size(latTol,1)
     numSol = 5;
 
     e_ecsw = 1e-5;
-    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phiStan,x_hist,dt,Nt,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
+    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phiStan,x_hist,dt,Nt+1,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
     save(strcat('HeatDiffECSWweights/LSPG_1e5_', int2str(i), '.mat'),'xi','indices')
 
-    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phiStan,x_hist,dt,Nt,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
+    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phiStan,x_hist,dt,Nt+1,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
     save(strcat('HeatDiffECSWweights/Galerkin_1e5_', int2str(i), '.mat'),'xi','indices')
 
     e_ecsw = 1e-7;
-    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phiStan,x_hist,dt,Nt,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
+    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phiStan,x_hist,dt,Nt+1,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
     save(strcat('HeatDiffECSWweights/LSPG_1e7_', int2str(i), '.mat'),'xi','indices')
 
-    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phiStan,x_hist,dt,Nt,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
+    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phiStan,x_hist,dt,Nt+1,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
     save(strcat('HeatDiffECSWweights/Galerkin_1e7_', int2str(i), '.mat'),'xi','indices')
 
 
     e_ecsw = 1e-9;
-    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phiStan,x_hist,dt,Nt,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
+    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phiStan,x_hist,dt,Nt+1,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
     save(strcat('HeatDiffECSWweights/LSPG_1e9_', int2str(i), '.mat'),'xi','indices')
 
-    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phiStan,x_hist,dt,Nt,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
+    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phiStan,x_hist,dt,Nt+1,numSol,e_ecsw,a_all,b_all,mu,Nh,x);
     save(strcat('HeatDiffECSWweights/Galerkin_1e9_', int2str(i), '.mat'),'xi','indices')
     
   

@@ -22,17 +22,17 @@ tol = 1e-6;
 
 nRep = 10;
 
-t_domain = linspace(0,dt*Nt,Nt);
+t_domain = linspace(0,dt*Nt,Nt+1);
 [X, T] = meshgrid(x,t_domain);
 
 
 [C, A, F, B, M] = getCoeffMat(N,x,dx);
 
-x_hist = getAllTrainingSolutionsOptimized(N,dt,Nt,tol,x,dx);
+x_hist = getAllTrainingSolutionsOptimized(N,dt,Nt+1,tol,x,dx);
 
 FOMtime = 0;
 for i=1:nRep
-    [x_hist_test, FOMtime_sol] = getSolutionOptimized(N,dt,Nt,tol,mu_left,mu2,dx,x);
+    [x_hist_test, FOMtime_sol] = getSolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,dx,x);
     FOMtime = FOMtime + FOMtime_sol;
 end
 
@@ -105,39 +105,39 @@ for i=1:size(latTol,1)
     phi = U(:,1:numModes);
 
     for k=1:nRep
-        [x_hat_Galerkin, ROMtime] = getStandardGalerkinSolutionOptimized(N,dt,Nt,tol,mu_left,mu2,dx,x,phi);
+        [x_hat_Galerkin, ROMtime] = getStandardGalerkinSolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,dx,x,phi);
         speedupFactorStandardGalerkin(i) = speedupFactorStandardGalerkin(i) + ROMtime;
     
-        [x_hat_LSPG, ROMtime] = getStandardLSPGsolutionOptimized(N,dt,Nt,tol,mu_left,mu2,dx,x,phi);
+        [x_hat_LSPG, ROMtime] = getStandardLSPGsolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,dx,x,phi);
         speedupFactorStandardLSPG(i) = speedupFactorStandardLSPG(i) + ROMtime;
     
     
-        [x_hat_HFGalerkin, ROMtime] = getSolutionHFGalerkinOptimized(N,dt,Nt,tol,mu_left,mu2,dx,x,C,A,F,B,M,phi);
+        [x_hat_HFGalerkin, ROMtime] = getSolutionHFGalerkinOptimized(N,dt,Nt+1,tol,mu_left,mu2,dx,x,C,A,F,B,M,phi);
         speedupFactorHFGalerkin(i) = speedupFactorHFGalerkin(i) + ROMtime;
     
     
-        [x_hat_HFLSPG, ROMtime] = getSolutionHFLSPGOptimized(N,dt,Nt,tol,mu_left,mu2,dx,x,C,A,F,B,M,phi);
+        [x_hat_HFLSPG, ROMtime] = getSolutionHFLSPGOptimized(N,dt,Nt+1,tol,mu_left,mu2,dx,x,C,A,F,B,M,phi);
         speedupFactorHFLSPG(i) = speedupFactorHFLSPG(i) + ROMtime;
     
 
         load(strcat('BurgersECSWweights/LSPG_1e5_', int2str(i), '.mat'),'xi','indices');
-        [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt,tol,mu_left,mu2,phi,xi,indices,x);
+        [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,phi,xi,indices,x);
         speedupFactorECSWLSPG1e5(i) = speedupFactorECSWLSPG1e5(i) + ROMtime;
     
 
         load(strcat('BurgersECSWweights/Galerkin_1e5_', int2str(i), '.mat'),'xi','indices');
-        [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt,tol,mu_left,mu2,phi,xi,indices,x);
+        [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,phi,xi,indices,x);
         speedupFactorECSWGalerkin1e5(i) = speedupFactorECSWGalerkin1e5(i) + ROMtime;
     
     
 
         load(strcat('BurgersECSWweights/LSPG_1e9_', int2str(i), '.mat'),'xi','indices');
-        [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt,tol,mu_left,mu2,phi,xi,indices,x);
+        [x_hat_hist, ROMtime] = getECSWLSPGsolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,phi,xi,indices,x);
         speedupFactorECSWLSPG1e9(i) = speedupFactorECSWLSPG1e9(i) + ROMtime;
         
 
         load(strcat('BurgersECSWweights/Galerkin_1e9_', int2str(i), '.mat'),'xi','indices');
-        [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt,tol,mu_left,mu2,phi,xi,indices,x);
+        [x_hat_hist, ROMtime] = getECSWGalerkinSolutionOptimized(N,dt,Nt+1,tol,mu_left,mu2,phi,xi,indices,x);
         speedupFactorECSWGalerkin1e9(i) = speedupFactorECSWGalerkin1e9(i) + ROMtime;
     end
 

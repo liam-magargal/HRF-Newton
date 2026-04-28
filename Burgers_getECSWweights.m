@@ -13,10 +13,10 @@ dx = 1/(N+1);
 x = linspace(dx,1-dx,N);
 tol = 1e-6;
 
-t_domain = linspace(0,dt*Nt,Nt);
+t_domain = linspace(0,dt*Nt,Nt+1);
 [X, T] = meshgrid(x,t_domain);
 
-x_hist = getAllTrainingSolutionsOptimized(N,dt,Nt,tol,x,dx);
+x_hist = getAllTrainingSolutionsOptimized(N,dt,Nt+1,tol,x,dx);
 
 
 %% ROMs
@@ -48,24 +48,24 @@ for i=1:size(latTol,1)
     numSol = 10;
 
     e_ecsw = 1e-5;
-    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phi,x_hist,dt,Nt,numSol,e_ecsw,Nh,x);
+    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phi,x_hist,dt,Nt+1,numSol,e_ecsw,Nh,x);
     save(strcat('BurgersECSWweights/LSPG_1e5_', int2str(i), '.mat'),'xi','indices')
 
-    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phi,x_hist,dt,Nt,numSol,e_ecsw,Nh,x);
+    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phi,x_hist,dt,Nt+1,numSol,e_ecsw,Nh,x);
     save(strcat('BurgersECSWweights/Galerkin_1e5_', int2str(i), '.mat'),'xi','indices')
 
     e_ecsw = 1e-7;
-    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phi,x_hist,dt,Nt,numSol,e_ecsw,Nh,x);
+    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phi,x_hist,dt,Nt+1,numSol,e_ecsw,Nh,x);
     save(strcat('BurgersECSWweights/LSPG_1e7_', int2str(i), '.mat'),'xi','indices')
 
-    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phi,x_hist,dt,Nt,numSol,e_ecsw,Nh,x);
+    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phi,x_hist,dt,Nt+1,numSol,e_ecsw,Nh,x);
     save(strcat('BurgersECSWweights/Galerkin_1e7_', int2str(i), '.mat'),'xi','indices')
 
     e_ecsw = 1e-9;
-    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phi,x_hist,dt,Nt,numSol,e_ecsw,Nh,x);
+    [xi, indices] = getECSWLSPGweightsTwoStepSampledSol(phi,x_hist,dt,Nt+1,numSol,e_ecsw,Nh,x);
     save(strcat('BurgersECSWweights/LSPG_1e9_', int2str(i), '.mat'),'xi','indices')
     
-    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phi,x_hist,dt,Nt,numSol,e_ecsw,Nh,x);
+    [xi, indices] = getECSWGalerkinWeightsTwoStepSampledSol(phi,x_hist,dt,Nt+1,numSol,e_ecsw,Nh,x);
     save(strcat('BurgersECSWweights/Galerkin_1e9_', int2str(i), '.mat'),'xi','indices')
 
   
